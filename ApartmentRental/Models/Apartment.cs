@@ -18,7 +18,8 @@ namespace ApartmentRental.Models
         public decimal Latitude { get; set; }
         public decimal Longitude { get; set; }
         public DateTime DateAdded { get; set; }
-        //public Realtor AssignedRealtor { get; set; }
+        
+        public User RealtorUser { get; set; }
 
     }
 }
