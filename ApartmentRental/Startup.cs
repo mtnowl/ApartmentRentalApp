@@ -16,7 +16,6 @@ using ApartmentRental.Helpers;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using ApartmentRental.Services;
 
 namespace ApartmentRental
 {
@@ -62,9 +61,6 @@ namespace ApartmentRental
                     ValidateAudience = false
                 };
             });
-
-            // configure DI for application services
-            services.AddScoped<IUserService, UserService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

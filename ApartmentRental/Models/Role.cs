@@ -7,11 +7,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ApartmentRental.Models
 {
-    [Table("Role", Schema = "dbo")]
-    public class Role
+    public static class Role
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-
+        public const string Admin = "Admin";
+        public const string Client = "Client";
+        public const string Realtor = "Realtor";
     }
 }

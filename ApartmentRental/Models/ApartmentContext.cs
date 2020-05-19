@@ -14,8 +14,6 @@ namespace ApartmentRental.Models
         }
 
         public DbSet<Apartment> Apartments { get; set; }
-        public DbSet<Role> Roles { get; set; }
-
         public DbSet<User> Users { get; set; }
     }
 }

@@ -59,7 +59,6 @@
   </ItemGroup>
   <ItemGroup>
     <Build Include="Apartment.sql" />
-    <Build Include="Role.sql" />
     <Build Include="User.sql" />
     <PostDeploy Include="TestData.sql" />
   </ItemGroup>

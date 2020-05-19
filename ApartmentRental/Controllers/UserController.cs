@@ -7,7 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ApartmentRental.Models;
 using Microsoft.AspNetCore.Authorization;
-using ApartmentRental.Services;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
+using ApartmentRental.Helpers;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 
 namespace ApartmentRental.Controllers
 {
@@ -17,19 +23,19 @@ namespace ApartmentRental.Controllers
     public class UserController : ControllerBase
     {
         private readonly ApartmentContext _context;
-        private readonly IUserService _userService;
+        private readonly AppSettings _appSettings;
 
-        public UserController(ApartmentContext context, IUserService userService)
+        public UserController(ApartmentContext context, IOptions<AppSettings> appSettings)
         {
             _context = context;
-            _userService = userService;
+            _appSettings = appSettings.Value;
         }
 
         [AllowAnonymous]
         [HttpPost("authenticate")]
         public async Task<IActionResult> Authenticate([FromBody]AuthenticateModel model)
         {
-            var user = _userService.Authenticate(model.Username, model.Password);
+            var user = Authenticate(model.Username, model.Password);
 
             if (user == null)
                 return await Task.FromResult(BadRequest(new { message = "Username or password is incorrect" }));
@@ -37,8 +43,36 @@ namespace ApartmentRental.Controllers
             return await Task.FromResult(Ok(user));
         }
 
+        private User Authenticate(string username, string password)
+        {
+            var user = _context.Users.SingleOrDefault(x => x.Username == username && x.Password == password);
+
+            // return null if user not found
+            if (user == null)
+                return null;
+
+            // authentication successful so generate jwt token
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.Name, user.Id.ToString()),
+                    new Claim(ClaimTypes.Role, user.Role)
+                }),
+                Expires = DateTime.UtcNow.AddDays(7),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            user.Token = tokenHandler.WriteToken(token);
+
+            return user.WithoutPassword();
+        }
+
+
         // GET: api/User
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Role.Admin)]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
