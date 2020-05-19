@@ -1,4 +1,8 @@
-﻿INSERT INTO [dbo].[Role] ([Id], [Name]) VALUES (1, N'Admin     ')
+﻿DELETE FROM [dbo].[Apartment]
+DELETE FROM [dbo].[User]
+DELETE FROM [dbo].[Role]
+
+INSERT INTO [dbo].[Role] ([Id], [Name]) VALUES (1, N'Admin     ')
 INSERT INTO [dbo].[Role] ([Id], [Name]) VALUES (2, N'Realtor   ')
 INSERT INTO [dbo].[Role] ([Id], [Name]) VALUES (3, N'Client    ');
 
