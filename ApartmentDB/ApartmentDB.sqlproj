@@ -63,4 +63,7 @@
     <Build Include="User.sql" />
     <PostDeploy Include="TestData.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <RefactorLog Include="ApartmentDB.refactorlog" />
+  </ItemGroup>
 </Project>
