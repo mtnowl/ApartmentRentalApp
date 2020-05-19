@@ -28,7 +28,7 @@ namespace ApartmentRental
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApartmentContext>(opt => 
-                opt.UseInMemoryDatabase("Apartments"));
+                opt.UseSqlServer(Configuration.GetConnectionString("ApartmentDB")));
             services.AddControllers();
         }
 

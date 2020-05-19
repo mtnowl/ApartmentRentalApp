@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "yXL2OoGLG5hxMS6ty/TpK9HPGPXNDRs5fuXGInwgksUFE/z5gQXaBtDKN2b0jsHfehhJn6SAYjwSheRfBMtM6g==",
+  "dgSpecHash": "QMiuyqfdqlLQJxcWqRWk0Hz7v3ksdDrQjSSH917sAlV1eEfLvDVo5NNthrgMEYv+gwW+lpIryRo+3ybnD+Lpbw==",
   "success": true,
   "projectFilePath": "C:\\Users\\henry\\Documents\\Github\\ApartmentRentalApp\\ApartmentRental\\ApartmentRental.csproj",
   "expectedPackageFiles": [
@@ -24,7 +24,6 @@
     "C:\\Users\\henry\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\3.1.4\\microsoft.entityframeworkcore.abstractions.3.1.4.nupkg.sha512",
     "C:\\Users\\henry\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\3.1.4\\microsoft.entityframeworkcore.analyzers.3.1.4.nupkg.sha512",
     "C:\\Users\\henry\\.nuget\\packages\\microsoft.entityframeworkcore.design\\3.1.2\\microsoft.entityframeworkcore.design.3.1.2.nupkg.sha512",
-    "C:\\Users\\henry\\.nuget\\packages\\microsoft.entityframeworkcore.inmemory\\3.1.4\\microsoft.entityframeworkcore.inmemory.3.1.4.nupkg.sha512",
     "C:\\Users\\henry\\.nuget\\packages\\microsoft.entityframeworkcore.relational\\3.1.4\\microsoft.entityframeworkcore.relational.3.1.4.nupkg.sha512",
     "C:\\Users\\henry\\.nuget\\packages\\microsoft.entityframeworkcore.sqlite\\3.1.2\\microsoft.entityframeworkcore.sqlite.3.1.2.nupkg.sha512",
     "C:\\Users\\henry\\.nuget\\packages\\microsoft.entityframeworkcore.sqlite.core\\3.1.2\\microsoft.entityframeworkcore.sqlite.core.3.1.2.nupkg.sha512",

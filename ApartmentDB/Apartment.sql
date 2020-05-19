@@ -1,7 +1,7 @@
 ﻿CREATE TABLE [dbo].[Apartment]
 (
 	[Id] INT NOT NULL PRIMARY KEY, 
-    [Name] NCHAR(30) NOT NULL, 
+    [Name] NVARCHAR(50) NOT NULL, 
     [Description] NVARCHAR(MAX) NOT NULL, 
     [Area] DECIMAL NOT NULL, 
     [MonthlyPrice] MONEY NOT NULL, 
