@@ -6,21 +6,39 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ApartmentRental.Models;
+using Microsoft.AspNetCore.Authorization;
+using ApartmentRental.Services;
 
 namespace ApartmentRental.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
         private readonly ApartmentContext _context;
+        private readonly IUserService _userService;
 
-        public UserController(ApartmentContext context)
+        public UserController(ApartmentContext context, IUserService userService)
         {
             _context = context;
+            _userService = userService;
+        }
+
+        [AllowAnonymous]
+        [HttpPost("authenticate")]
+        public async Task<IActionResult> Authenticate([FromBody]AuthenticateModel model)
+        {
+            var user = _userService.Authenticate(model.Username, model.Password);
+
+            if (user == null)
+                return await Task.FromResult(BadRequest(new { message = "Username or password is incorrect" }));
+
+            return await Task.FromResult(Ok(user));
         }
 
         // GET: api/User
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {

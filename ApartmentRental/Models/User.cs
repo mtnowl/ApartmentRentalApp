@@ -15,5 +15,10 @@ namespace ApartmentRental.Models
         public string Password { get; set; }
 
         public int RoleId { get; set; }
+
+        [NotMapped]
+        public string Role { get; set; }
+        [NotMapped]
+        public string Token { get; set; }
     }
 }
