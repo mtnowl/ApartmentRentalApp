@@ -6,9 +6,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ApartmentRental.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 
 namespace ApartmentRental.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ApartmentController : ControllerBase
@@ -21,10 +24,18 @@ namespace ApartmentRental.Controllers
         }
 
         // GET: api/Apartment
+        [Authorize(Roles = Role.Admin + "," + Role.Realtor)]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Apartment>>> GetApartment()
         {
             return await _context.Apartments.ToListAsync();
+        }
+
+        // GET: api/Apartment
+        [HttpGet("rentable")]
+        public async Task<ActionResult<IEnumerable<Apartment>>> GetRentableApartment()
+        {
+            return await _context.Apartments.Where(a => !a.IsRented).ToListAsync();
         }
 
         // GET: api/Apartment/5
@@ -32,10 +43,13 @@ namespace ApartmentRental.Controllers
         public async Task<ActionResult<Apartment>> GetApartment(int id)
         {
             var apartment = await _context.Apartments.FindAsync(id);
-
             if (apartment == null)
             {
                 return NotFound();
+            }
+            if (User.IsInRole(Role.Client) && apartment.IsRented)
+            {
+                return Forbid();
             }
 
             return apartment;
@@ -44,6 +58,7 @@ namespace ApartmentRental.Controllers
         // PUT: api/Apartment/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        [Authorize(Roles = Role.Admin + "," + Role.Realtor)]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutApartment(int id, Apartment apartment)
         {
@@ -76,6 +91,7 @@ namespace ApartmentRental.Controllers
         // POST: api/Apartment
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        [Authorize(Roles = Role.Admin + "," + Role.Realtor)]
         [HttpPost]
         public async Task<ActionResult<Apartment>> PostApartment(Apartment apartment)
         {
@@ -86,6 +102,7 @@ namespace ApartmentRental.Controllers
         }
 
         // DELETE: api/Apartment/5
+        [Authorize(Roles = Role.Admin + "," + Role.Realtor)]
         [HttpDelete("{id}")]
         public async Task<ActionResult<Apartment>> DeleteApartment(int id)
         {

@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [dbo].[Apartment]
 (
-	[Id] INT NOT NULL PRIMARY KEY, 
+	[Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1), 
     [Name] NVARCHAR(50) NOT NULL, 
     [Description] NVARCHAR(MAX) NOT NULL, 
     [Area] DECIMAL NOT NULL, 

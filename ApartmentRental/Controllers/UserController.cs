@@ -17,7 +17,7 @@ using System.Security.Claims;
 
 namespace ApartmentRental.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = Role.Admin)]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -72,7 +72,6 @@ namespace ApartmentRental.Controllers
 
 
         // GET: api/User
-        [Authorize(Roles = Role.Admin)]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
@@ -136,6 +135,22 @@ namespace ApartmentRental.Controllers
 
             return CreatedAtAction("GetUser", new { id = user.Id }, user);
         }
+
+        // POST: api/User/signup
+        [AllowAnonymous]
+        [HttpPost("signup")]
+        public async Task<ActionResult<User>> SignupUser(User user)
+        {
+            user.Role = Role.Client;
+            user.Token = string.Empty;
+
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetUser", new { id = user.Id }, user);
+        }
+
+
 
         // DELETE: api/User/5
         [HttpDelete("{id}")]
