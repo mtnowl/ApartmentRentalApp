@@ -33,11 +33,15 @@ export const actions = {
     });
   },
   async show({ commit }, params) {
-    await this.$axios.get(`/apartment/${params.id}`).then((res) => {
-      if (res.status === 200) {
-        commit('mergeapts', res.data);
-      }
-    });
+    if (params.id === -1) {
+      commit('setapts', {});
+    } else {
+      await this.$axios.get(`/apartment/${params.id}`).then((res) => {
+        if (res.status === 200) {
+          commit('mergeapts', res.data);
+        }
+      });
+    }
   },
   async set({ commit }, apts) {
     await commit('set', apts);

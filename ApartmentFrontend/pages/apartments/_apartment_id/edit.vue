@@ -4,6 +4,7 @@
 
 <script>
 import ApartmentForm from '~/components/ApartmentForm';
+
 export default {
   name: 'EditApartment',
   middleware: 'authy',

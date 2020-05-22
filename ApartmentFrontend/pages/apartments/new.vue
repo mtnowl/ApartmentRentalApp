@@ -10,8 +10,8 @@ export default {
     auth: { authority: 1 }
   },
   components: { ApartmentForm },
-  fetch({ store }) {
-    store.commit('apartments/set', {});
+  async fetch({ store, params }) {
+    await store.dispatch('apartments/show', { id: -1 });
   }
 };
 </script>
