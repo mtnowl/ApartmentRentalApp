@@ -35,7 +35,7 @@ namespace ApartmentRental
                 opt.UseSqlServer(Configuration.GetConnectionString("ApartmentDB")));
 
             services.AddCors();
-            services.AddControllers().AddNewtonsoftJson();
+            services.AddControllers();
 
             // configure strongly typed settings objects
             var appSettingsSection = Configuration.GetSection("AppSettings");
