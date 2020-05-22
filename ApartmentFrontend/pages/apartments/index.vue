@@ -8,6 +8,50 @@
       </v-col>
     </v-row>
     <v-row>
+      <v-form v-model="valid" @submit.prevent="refreshDataWithFilter">
+        <v-col>
+          <v-text-field
+            v-model="filter.minArea"
+            label="Min Size"
+            :rules="[rules.number]"
+            required
+          ></v-text-field>
+          <v-text-field
+            v-model="filter.maxArea"
+            label="Max Size"
+            :rules="[rules.number]"
+            required
+          ></v-text-field>
+          <v-text-field
+            v-model="filter.minPrice"
+            label="Min Price"
+            :rules="[rules.number]"
+            required
+          ></v-text-field>
+          <v-text-field
+            v-model="filter.maxPrice"
+            label="Max Price"
+            :rules="[rules.number]"
+            required
+          ></v-text-field>
+          <v-text-field
+            v-model="filter.minRooms"
+            label="Min # of Rooms"
+            :rules="[rules.number, rules.integer]"
+            required
+          ></v-text-field>
+          <v-text-field
+            v-model="filter.maxRooms"
+            label="Max # of Rooms"
+            :rules="[rules.number, rules.integer]"
+            required
+          ></v-text-field>
+          <v-btn type="submit" :disabled="!valid">Filter</v-btn>
+          <v-btn @click="clearFilter">Clear</v-btn>
+        </v-col>
+      </v-form>
+    </v-row>
+    <v-row>
       <v-col>
         <v-data-table :headers="headers" :items="list">
           <template v-slot:item.name="{ item }">
@@ -70,7 +114,7 @@ export default {
         { text: 'Name', value: 'name' },
         { text: 'Description', value: 'description' },
         { text: 'Rooms', value: 'rooms' },
-        { text: 'Area', value: 'area' },
+        { text: 'Size', value: 'area' },
         { text: 'Price', value: 'monthlyPrice' },
         { text: 'Occupied', value: 'isRented' }
       ],
@@ -89,7 +133,23 @@ export default {
           key: 'actions',
           label: 'actions'
         }
-      ]
+      ],
+      valid: true,
+      filter: {
+        minArea: null,
+        maxArea: null,
+        minPrice: null,
+        maxPrice: null,
+        minRooms: null,
+        maxRooms: null
+      },
+      rules: {
+        number: (v) => {
+          console.log(v);
+          return v === null || v === '' || !isNaN(v) || 'Must be a number';
+        },
+        integer: (v) => Number.isInteger(+v) || 'Must be an integer'
+      }
     };
   },
   computed: {
@@ -109,6 +169,12 @@ export default {
       this.$store
         .dispatch('apartments/delete', { id: this.id })
         .then(() => this.$store.dispatch('apartments/get'));
+    },
+    refreshDataWithFilter() {
+      this.$store.dispatch('apartments/get', { ...this.filter });
+    },
+    clearFilter() {
+      this.filter = {};
     }
   }
 };

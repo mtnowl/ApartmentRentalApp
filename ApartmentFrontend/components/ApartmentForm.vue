@@ -18,43 +18,37 @@
           <v-text-field
             v-model="apartment.rooms"
             label="Rooms"
-            type="number"
-            :rules="[rules.number, rules.integer]"
+            :rules="[rules.required, rules.number, rules.integer]"
             required
           ></v-text-field>
           <v-text-field
             v-model="apartment.area"
             label="Area"
-            type="number"
-            :rules="[rules.number]"
+            :rules="[rules.required, rules.number]"
             required
           ></v-text-field>
           <v-text-field
             v-model="apartment.monthlyPrice"
             label="Price"
-            type="number"
-            :rules="[rules.number]"
+            :rules="[rules.required, rules.number]"
             required
           ></v-text-field>
           <v-text-field
             v-model="apartment.latitude"
             label="Latitude"
-            type="number"
-            :rules="[rules.number]"
+            :rules="[rules.required, rules.number]"
             required
           ></v-text-field>
           <v-text-field
             v-model="apartment.longitude"
             label="Longitude"
-            type="number"
-            :rules="[rules.number]"
+            :rules="[rules.required, rules.number]"
             required
           ></v-text-field>
           <v-text-field
             v-model="apartment.realtorUserId"
             label="Assigned Realtor"
-            type="number"
-            :rules="[rules.number, rules.integer]"
+            :rules="[rules.required, rules.number, rules.integer]"
             required
           ></v-text-field>
           <v-checkbox
@@ -81,7 +75,7 @@ export default {
     errorMessage: '',
     rules: {
       required: (v) => !!v || 'Required',
-      number: (v) => !isNaN(parseFloat(v)) || 'Must be a number',
+      number: (v) => !isNaN(v) || 'Must be a number',
       integer: (v) => Number.isInteger(+v) || 'Must be an integer'
     }
   }),
