@@ -14,6 +14,7 @@ using ApartmentRental.Helpers;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 
 namespace ApartmentRental.Controllers
 {
@@ -76,6 +77,15 @@ namespace ApartmentRental.Controllers
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
             return await _context.Users.ToListAsync();
+        }
+
+        [AllowAnonymous]
+        [HttpGet("current")]
+        public async Task<ActionResult<User>> GetCurrentUser()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.Name);
+
+            return await _context.Users.FindAsync(Int32.Parse(userId));
         }
 
         // GET: api/User/5

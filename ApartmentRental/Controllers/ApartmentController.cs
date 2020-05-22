@@ -24,25 +24,22 @@ namespace ApartmentRental.Controllers
         }
 
         // GET: api/Apartment
-        [Authorize(Roles = Role.Admin + "," + Role.Realtor)]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Apartment>>> GetApartment([FromQuery] ApartmentParameters apartmentParameters)
         {
-            return await _context.Apartments.Where(
+            var list = _context.Apartments.Where(
                 a => a.Area <= (apartmentParameters.MaxArea ?? int.MaxValue) &&
                     a.Area >= (apartmentParameters.MinArea ?? int.MinValue) &&
                     a.Rooms <= (apartmentParameters.MaxRooms ?? int.MaxValue) &&
                     a.Rooms >= (apartmentParameters.MinRooms ?? int.MinValue) &&
                     a.MonthlyPrice <= (apartmentParameters.MaxPrice ?? decimal.MaxValue) &&
                     a.MonthlyPrice >= (apartmentParameters.MinPrice ?? decimal.MinValue)
-                ).ToListAsync();
-        }
-
-        // GET: api/Apartment
-        [HttpGet("rentable")]
-        public async Task<ActionResult<IEnumerable<Apartment>>> GetRentableApartment()
-        {
-            return await _context.Apartments.Where(a => !a.IsRented).ToListAsync();
+                );
+            if(User.IsInRole(Role.Client))
+            {
+                list = list.Where(a => !a.IsRented);
+            }
+            return await list.ToListAsync();
         }
 
         // GET: api/Apartment/5
