@@ -36,6 +36,27 @@
             :rules="[rules.number]"
             required
           ></v-text-field>
+          <v-text-field
+            v-model="apartment.latitude"
+            label="Latitude"
+            type="number"
+            :rules="[rules.number]"
+            required
+          ></v-text-field>
+          <v-text-field
+            v-model="apartment.longitude"
+            label="Longitude"
+            type="number"
+            :rules="[rules.number]"
+            required
+          ></v-text-field>
+          <v-text-field
+            v-model="apartment.realtorUserId"
+            label="Assigned Realtor"
+            type="number"
+            :rules="[rules.number, rules.integer]"
+            required
+          ></v-text-field>
           <v-checkbox
             v-model="apartment.isRented"
             label="Occupied"
