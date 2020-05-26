@@ -1,10 +1,5 @@
 <template>
-  <div>
-    <login-form></login-form>
-    <n-link to="/signup">
-      <v-btn color="primary">Need to signup?</v-btn>
-    </n-link>
-  </div>
+  <login-form is-signup></login-form>
 </template>
 
 <script>
