@@ -15,6 +15,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace ApartmentRental.Controllers
 {
@@ -140,10 +141,7 @@ namespace ApartmentRental.Controllers
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User user)
         {
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetUser", new { id = user.Id }, user);
+            return await AddUser(user);
         }
 
         // POST: api/User/signup
@@ -154,12 +152,20 @@ namespace ApartmentRental.Controllers
             user.Role = Role.Client;
             user.Token = string.Empty;
 
+            return await AddUser(user);
+        }
+
+        private async Task<ActionResult<User>> AddUser(User user)
+        {
+            if(_context.Users.FirstOrDefault(u => u.Username == user.Username) != null)
+            {
+                return BadRequest(new { message = "Username already exists."});
+            }
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetUser", new { id = user.Id }, user);
         }
-
 
 
         // DELETE: api/User/5

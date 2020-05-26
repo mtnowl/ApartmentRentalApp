@@ -1,5 +1,5 @@
 <template>
-  <v-form v-model="valid" @submit.prevent="submit">
+  <v-form ref="form" v-model="valid" @submit.prevent="submit">
     <v-container>
       <v-row>
         <v-col>
@@ -88,6 +88,10 @@ export default {
       return Object.prototype.hasOwnProperty.call(this.apartment, 'id');
     },
     submit() {
+      if (!this.$refs.form.validate()) {
+        return;
+      }
+
       const action = 'apartments/' + (this.isUpdate() ? 'update' : 'create');
 
       this.$store

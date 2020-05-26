@@ -99,6 +99,8 @@ namespace ApartmentRental.Controllers
         [HttpPost]
         public async Task<ActionResult<Apartment>> PostApartment(Apartment apartment)
         {
+            apartment.DateAdded = DateTime.Now;
+
             _context.Apartments.Add(apartment);
             await _context.SaveChangesAsync();
 

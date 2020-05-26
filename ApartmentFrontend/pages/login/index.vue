@@ -2,7 +2,7 @@
   <div>
     <login-form></login-form>
     <n-link to="/signup">
-      <v-btn color="primary">Need to signup?</v-btn>
+      <v-btn>Need to signup?</v-btn>
     </n-link>
   </div>
 </template>

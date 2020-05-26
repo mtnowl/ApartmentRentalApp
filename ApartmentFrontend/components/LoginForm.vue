@@ -7,7 +7,7 @@
             isSignup ? 'Sign Up' : 'Login'
           }}</v-toolbar-title>
         </v-toolbar>
-        <v-form v-model="valid" @submit.prevent="submit">
+        <v-form ref="form" v-model="valid" @submit.prevent="submit">
           <v-text-field
             v-model="login.username"
             label="Username"
@@ -34,11 +34,14 @@
             required
           ></v-text-field>
           <v-card-actions>
-            <v-btn type="submit" :disabled="!valid" color="primary"
+            <v-btn
+              type="submit"
+              :disabled="!valid || isSubmitting"
+              color="primary"
               >Submit</v-btn
             >
-            <p>{{ errorMessage }}</p>
           </v-card-actions>
+          <p>{{ message }}</p>
         </v-form>
       </v-card>
     </v-col>
@@ -63,7 +66,8 @@ export default {
         password: '',
         confirmPassword: ''
       },
-      errorMessage: '',
+      isSubmitting: false,
+      message: '',
       rules: {
         required: (v) => !!v || 'Required',
         confirmPassword: (v) =>
@@ -82,26 +86,48 @@ export default {
   },
   methods: {
     async submit() {
-      if (this.isSignup) {
-        this.userSignup();
-      } else {
-        await this.userLogin();
+      if (!this.$refs.form.validate()) {
+        return;
+      }
+
+      this.isSubmitting = true;
+      try {
+        if (this.isSignup) {
+          await this.userSignup();
+        } else {
+          await this.userLogin();
+        }
+      } catch (err) {
+        if (this.isSignup) {
+          this.message = 'Signup failed: ' + err.response.data.message;
+        } else {
+          this.message = 'Login failed: ' + err;
+        }
+      } finally {
+        this.isSubmitting = false;
       }
     },
     async userLogin() {
-      try {
-        await this.$auth.loginWith('local', {
-          data: this.login
-        });
-        this.$router.push({
-          path: '/apartments'
-        });
-      } catch (err) {
-        this.errorMessage = 'Login failed: ' + err;
-      }
+      await this.$auth.loginWith('local', {
+        data: this.login
+      });
+      this.$router.push({
+        path: '/apartments'
+      });
     },
-    userSignup() {
-      console.log('hi');
+    async userSignup() {
+      const user = {
+        username: this.login.username,
+        password: this.login.password
+      };
+      const response = await this.$axios.post(`/user/signup`, { ...user });
+
+      if (response.status === 201) {
+        this.message = 'Signup succeeded, redirecting to login...';
+        setTimeout(() => this.$router.push('/login'), 1000);
+      } else {
+        this.message = 'Signup failed: ' + response.statusText;
+      }
     }
   }
 };
