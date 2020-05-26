@@ -1,6 +1,6 @@
 <template>
-  <v-form ref="form" v-model="valid" @submit.prevent="submit">
-    <v-container>
+  <v-container>
+    <v-form ref="form" v-model="valid" @submit.prevent="submit">
       <v-row>
         <v-col>
           <v-text-field
@@ -61,12 +61,12 @@
           ></v-checkbox>
         </v-col>
       </v-row>
-    </v-container>
-    <v-btn :disabled="!valid" type="submit" color="primary">{{
-      isUpdate() ? 'Update' : 'Submit'
-    }}</v-btn>
-    <p>{{ errorMessage }}</p>
-  </v-form>
+      <v-btn :disabled="!valid" type="submit" color="primary">{{
+        isUpdate() ? 'Update' : 'Submit'
+      }}</v-btn>
+      <p>{{ errorMessage }}</p>
+    </v-form>
+  </v-container>
 </template>
 <script>
 import { mapState } from 'vuex';

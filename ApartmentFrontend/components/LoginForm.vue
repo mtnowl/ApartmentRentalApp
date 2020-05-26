@@ -1,51 +1,59 @@
 <template>
-  <v-row align="center" justify="center">
-    <v-col cols="12" sm="8" md="4">
-      <v-card>
-        <v-toolbar color="primary" dark flat>
-          <v-toolbar-title>{{
-            isSignup ? 'Sign Up' : 'Login'
-          }}</v-toolbar-title>
-        </v-toolbar>
-        <v-form ref="form" v-model="valid" @submit.prevent="submit">
-          <v-text-field
-            v-model="login.username"
-            label="Username"
-            :prepend-icon="icons.person"
-            :rules="[rules.required]"
-            type="text"
-            required
-          ></v-text-field>
-          <v-text-field
-            v-model="login.password"
-            label="Password"
-            :prepend-icon="icons.password"
-            :rules="[rules.required]"
-            type="password"
-            required
-          ></v-text-field>
-          <v-text-field
-            v-if="isSignup"
-            v-model="login.confirmPassword"
-            label="Confirm Password"
-            :prepend-icon="icons.password"
-            :rules="[rules.required, rules.confirmPassword]"
-            type="password"
-            required
-          ></v-text-field>
-          <v-card-actions>
-            <v-btn
-              type="submit"
-              :disabled="!valid || isSubmitting"
-              color="primary"
-              >Submit</v-btn
-            >
-          </v-card-actions>
-          <p>{{ message }}</p>
-        </v-form>
-      </v-card>
-    </v-col>
-  </v-row>
+  <v-container>
+    <v-row align="center" justify="center">
+      <v-col cols="12" sm="8" md="4">
+        <v-card>
+          <v-toolbar color="primary" dark flat>
+            <v-toolbar-title>{{
+              isSignup ? 'Sign Up' : 'Login'
+            }}</v-toolbar-title>
+          </v-toolbar>
+          <v-card-text>
+            <v-form ref="form" v-model="valid" @submit.prevent="submit">
+              <v-text-field
+                v-model="login.username"
+                label="Username"
+                :prepend-icon="icons.person"
+                :rules="[rules.required]"
+                type="text"
+                required
+              ></v-text-field>
+              <v-text-field
+                v-model="login.password"
+                label="Password"
+                :prepend-icon="icons.password"
+                :rules="[rules.required]"
+                type="password"
+                required
+              ></v-text-field>
+              <v-text-field
+                v-if="isSignup"
+                v-model="login.confirmPassword"
+                label="Confirm Password"
+                :prepend-icon="icons.password"
+                :rules="[rules.required, rules.confirmPassword]"
+                type="password"
+                required
+              ></v-text-field>
+              <v-card-actions>
+                <v-btn v-if="!isSignup" to="/signup" nuxt>
+                  Need to signup?
+                </v-btn>
+                <v-spacer />
+                <v-btn
+                  type="submit"
+                  :disabled="!valid || isSubmitting"
+                  color="primary"
+                  >Submit
+                </v-btn>
+              </v-card-actions>
+              <p>{{ message }}</p>
+            </v-form>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>

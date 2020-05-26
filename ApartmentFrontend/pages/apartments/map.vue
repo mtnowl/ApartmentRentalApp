@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <v-container>
     <GMap
       ref="gMap"
       language="en"
@@ -22,7 +22,7 @@
         </GMapInfoWindow>
       </GMapMarker>
     </GMap>
-  </div>
+  </v-container>
 </template>
 
 <script>

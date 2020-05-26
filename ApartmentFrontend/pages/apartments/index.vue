@@ -2,11 +2,11 @@
   <v-container>
     <v-row>
       <v-col>
-        <v-btn :to="'/apartments/new'" color="primary">
-          Add New Apartment
-        </v-btn>
-        <v-btn :to="'/apartments/map'">
+        <v-btn to="/apartments/map" nuxt>
           View Map
+        </v-btn>
+        <v-btn v-if="canEdit" to="/apartments/new" nuxt color="primary">
+          Add New Apartment
         </v-btn>
       </v-col>
     </v-row>
@@ -49,8 +49,8 @@
             :rules="[rules.number, rules.integer]"
             required
           ></v-text-field>
-          <v-btn type="submit" :disabled="!valid">Filter</v-btn>
           <v-btn @click="clearFilter">Clear</v-btn>
+          <v-btn type="submit" :disabled="!valid" color="primary">Filter</v-btn>
         </v-col>
       </v-form>
     </v-row>
