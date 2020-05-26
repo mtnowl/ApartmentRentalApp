@@ -174,7 +174,8 @@ export default {
       this.$store.dispatch('apartments/get', { ...this.filter });
     },
     clearFilter() {
-      this.filter = {};
+      Object.keys(this.filter).forEach((p) => (this.filter[p] = null));
+      this.refreshDataWithFilter();
     }
   }
 };
