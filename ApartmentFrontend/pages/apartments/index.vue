@@ -2,8 +2,11 @@
   <v-container>
     <v-row>
       <v-col>
-        <v-btn variant="outline-success" class="mv-3" :to="'/apartments/new'">
+        <v-btn :to="'/apartments/new'" color="primary">
           Add New Apartment
+        </v-btn>
+        <v-btn :to="'/apartments/map'">
+          View Map
         </v-btn>
       </v-col>
     </v-row>
