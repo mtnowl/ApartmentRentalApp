@@ -26,6 +26,9 @@
         </v-col>
       </v-row>
     </v-container>
+    <v-btn @click="$router.go(-1)">
+      Cancel
+    </v-btn>
     <v-btn :disabled="!valid" type="submit" color="primary">{{
       isUpdate() ? 'Update' : 'Submit'
     }}</v-btn>

@@ -1,8 +1,8 @@
 <template>
   <v-container>
     <v-row>
-      <v-col>
-        <v-btn :to="'/users/new'" color="primary">
+      <v-col class="text-right">
+        <v-btn to="/users/new" nuxt color="primary">
           Add New User
         </v-btn>
       </v-col>
