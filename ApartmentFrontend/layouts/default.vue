@@ -4,7 +4,7 @@
       <v-tabs>
         <v-tab to="/apartments">Apartments</v-tab>
         <v-spacer />
-        <v-tab disabled> Hello {{ userName }}! </v-tab>
+        <v-tab v-if="loggedIn" disabled> Hello {{ userName }}! </v-tab>
         <v-spacer />
         <v-tab v-if="loggedIn" to="/logout">Logout</v-tab>
         <v-tab v-else to="/login">Login</v-tab>
@@ -28,7 +28,9 @@ export default {
       return this.$store.state.auth.loggedIn;
     },
     userName() {
-      return this.$store.state.auth.user.username;
+      return !this.$store.state.auth.user
+        ? ''
+        : this.$store.state.auth.user.username;
     }
   }
 };
