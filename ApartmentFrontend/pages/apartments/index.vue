@@ -148,7 +148,6 @@ export default {
       },
       rules: {
         number: (v) => {
-          console.log(v);
           return v === null || v === '' || !isNaN(v) || 'Must be a number';
         },
         integer: (v) => Number.isInteger(+v) || 'Must be an integer'
