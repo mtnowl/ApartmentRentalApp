@@ -15,24 +15,30 @@
               {{ item.username }}
             </n-link>
           </template>
-          <!--
-        
-
-          <v-btn
-            v-v-modal.confirmDestroy
-            variant="outline-secondary"
-            @click="id = data.item.id"
-          >
-            {{ 'remove' }}
-          </v-btn>
-        </template> -->
+          <template v-slot:item.actions="{ item }">
+            <n-link v-if="canEdit" :to="`/apartments/${item.id}/edit`">
+              <v-icon small>
+                mdi-pencil
+              </v-icon>
+            </n-link>
+            <v-icon small @click="setupDeleteDialog(item)">
+              mdi-delete
+            </v-icon>
+          </template>
         </v-data-table>
-        <v-dialog
-          id="confirmDestroy"
-          :title="'destroy_confirm_title'"
-          @ok="destroy"
-        >
-          {{ 'destroy_confirm' }}
+        <v-dialog v-model="deleteDialog" max-width="290">
+          <v-card>
+            <v-card-title>Delete {{ itemToDelete.username }}? </v-card-title>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="primary" text @click="deleteDialog = false">
+                No
+              </v-btn>
+              <v-btn color="error" text @click="deleteItem">
+                Yes
+              </v-btn>
+            </v-card-actions>
+          </v-card>
         </v-dialog>
       </v-col>
     </v-row>
@@ -53,24 +59,13 @@ export default {
   data() {
     return {
       headers: [
-        { text: 'username', value: 'username' },
-        { text: 'role', value: 'role' }
+        { text: 'Username', value: 'username' },
+        { text: 'Role', value: 'role' },
+        { text: 'Actions', value: 'actions', sortable: false }
       ],
       valid: true,
-      filter: {
-        minArea: null,
-        maxArea: null,
-        minPrice: null,
-        maxPrice: null,
-        minRooms: null,
-        maxRooms: null
-      },
-      rules: {
-        number: (v) => {
-          return v === null || v === '' || !isNaN(v) || 'Must be a number';
-        },
-        integer: (v) => Number.isInteger(+v) || 'Must be an integer'
-      }
+      itemToDelete: {},
+      deleteDialog: false
     };
   },
   computed: {
@@ -78,18 +73,18 @@ export default {
       list: (state) => {
         return state.list;
       }
-    }),
-    canEdit() {
-      return (
-        this.$auth.user.role === 'Admin' || this.$auth.user.role === 'Realtor'
-      );
-    }
+    })
   },
   methods: {
-    destroy() {
+    setupDeleteDialog(item) {
+      this.itemToDelete = item;
+      this.deleteDialog = true;
+    },
+    deleteItem() {
       this.$store
-        .dispatch('users/delete', { id: this.id })
+        .dispatch('users/delete', { id: this.itemToDelete.id })
         .then(() => this.$store.dispatch('users/get'));
+      this.deleteDialog = false;
     },
     refreshDataWithFilter() {
       this.$store.dispatch('users/get', { ...this.filter });
