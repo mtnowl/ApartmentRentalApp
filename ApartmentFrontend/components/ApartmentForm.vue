@@ -59,7 +59,7 @@
         </v-col>
       </v-row>
     </v-container>
-    <v-btn :disabled="!valid" type="submit">{{
+    <v-btn :disabled="!valid" type="submit" color="primary">{{
       isUpdate() ? 'Update' : 'Submit'
     }}</v-btn>
     <p>{{ errorMessage }}</p>

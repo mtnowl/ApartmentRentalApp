@@ -4,21 +4,29 @@
       <v-row>
         <v-col>
           <v-text-field
-            v-model="user.name"
-            label="Name"
+            v-model="user.username"
+            label="Username"
             :rules="[rules.required]"
             required
           ></v-text-field>
           <v-text-field
-            v-model="user.description"
-            label="Description"
+            v-model="user.password"
+            label="Password"
+            type="password"
             :rules="[rules.required]"
             required
           ></v-text-field>
+          <v-select
+            v-model="user.role"
+            :items="['Admin', 'Realtor', 'Client']"
+            label="Role"
+            :rules="[rules.required]"
+            required
+          ></v-select>
         </v-col>
       </v-row>
     </v-container>
-    <v-btn :disabled="!valid" type="submit">{{
+    <v-btn :disabled="!valid" type="submit" color="primary">{{
       isUpdate() ? 'Update' : 'Submit'
     }}</v-btn>
     <p>{{ errorMessage }}</p>
@@ -33,9 +41,7 @@ export default {
     valid: false,
     errorMessage: '',
     rules: {
-      required: (v) => !!v || 'Required',
-      number: (v) => !isNaN(v) || 'Must be a number',
-      integer: (v) => Number.isInteger(+v) || 'Must be an integer'
+      required: (v) => !!v || 'Required'
     }
   }),
   computed: {

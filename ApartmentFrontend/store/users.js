@@ -38,7 +38,7 @@ export const actions = {
     } else {
       await this.$axios.get(`/user/${params.id}`).then((res) => {
         if (res.status === 200) {
-          commit('', res.data);
+          commit('merge', res.data);
         }
       });
     }
