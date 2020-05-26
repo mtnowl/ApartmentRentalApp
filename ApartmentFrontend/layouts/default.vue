@@ -5,7 +5,9 @@
         <v-tab to="/apartments">Apartments</v-tab>
         <v-tab v-if="isAdmin" to="/users">Users</v-tab>
         <v-spacer />
-        <v-tab v-if="loggedIn" disabled> Hello {{ userName }}! </v-tab>
+        <v-tab v-if="loggedIn && $vuetify.breakpoint.smAndUp" disabled>
+          Hello {{ userName }}!
+        </v-tab>
         <v-spacer />
         <v-tab v-if="loggedIn" to="/logout">Logout</v-tab>
         <v-tab v-else to="/login">Login</v-tab>
