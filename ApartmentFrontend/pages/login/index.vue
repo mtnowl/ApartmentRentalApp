@@ -55,6 +55,11 @@ export default {
       }
     };
   },
+  created() {
+    if (this.$store.state.auth.loggedIn) {
+      this.$router.push('/apartments');
+    }
+  },
   methods: {
     async userLogin() {
       try {
@@ -67,12 +72,6 @@ export default {
       } catch (err) {
         this.errorMessage = 'Login failed: ' + err;
       }
-    },
-    async logout() {
-      await this.$auth.logout();
-    },
-    async getApartments() {
-      await this.$axios.$get('apartment');
     }
   }
 };
