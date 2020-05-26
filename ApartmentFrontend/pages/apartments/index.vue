@@ -5,55 +5,67 @@
         <v-btn to="/apartments/map" nuxt>
           View Map
         </v-btn>
+      </v-col>
+      <v-col class="text-right">
         <v-btn v-if="canEdit" to="/apartments/new" nuxt color="primary">
           Add New Apartment
         </v-btn>
       </v-col>
     </v-row>
-    <v-row>
-      <v-form v-model="valid" @submit.prevent="refreshDataWithFilter">
-        <v-col>
-          <v-text-field
-            v-model="filter.minArea"
-            label="Min Size"
-            :rules="[rules.number]"
-            required
-          ></v-text-field>
-          <v-text-field
-            v-model="filter.maxArea"
-            label="Max Size"
-            :rules="[rules.number]"
-            required
-          ></v-text-field>
-          <v-text-field
-            v-model="filter.minPrice"
-            label="Min Price"
-            :rules="[rules.number]"
-            required
-          ></v-text-field>
-          <v-text-field
-            v-model="filter.maxPrice"
-            label="Max Price"
-            :rules="[rules.number]"
-            required
-          ></v-text-field>
-          <v-text-field
-            v-model="filter.minRooms"
-            label="Min # of Rooms"
-            :rules="[rules.number, rules.integer]"
-            required
-          ></v-text-field>
-          <v-text-field
-            v-model="filter.maxRooms"
-            label="Max # of Rooms"
-            :rules="[rules.number, rules.integer]"
-            required
-          ></v-text-field>
-          <v-btn @click="clearFilter">Clear</v-btn>
-          <v-btn type="submit" :disabled="!valid" color="primary">Filter</v-btn>
-        </v-col>
-      </v-form>
-    </v-row>
+    <v-form v-model="valid" @submit.prevent="refreshDataWithFilter">
+      <v-container>
+        <v-row>
+          <v-col cols="12" sm="6" md="4">
+            <v-text-field
+              v-model="filter.minArea"
+              label="Min Size"
+              :rules="[rules.number]"
+              required
+            ></v-text-field>
+            <v-text-field
+              v-model="filter.maxArea"
+              label="Max Size"
+              :rules="[rules.number]"
+              required
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12" sm="6" md="4">
+            <v-text-field
+              v-model="filter.minPrice"
+              label="Min Price"
+              :rules="[rules.number]"
+              required
+            ></v-text-field>
+            <v-text-field
+              v-model="filter.maxPrice"
+              label="Max Price"
+              :rules="[rules.number]"
+              required
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12" sm="6" md="4">
+            <v-text-field
+              v-model="filter.minRooms"
+              label="Min # of Rooms"
+              :rules="[rules.number, rules.integer]"
+              required
+            ></v-text-field>
+            <v-text-field
+              v-model="filter.maxRooms"
+              label="Max # of Rooms"
+              :rules="[rules.number, rules.integer]"
+              required
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12" sm="6" md="12" class="text-right">
+            <v-btn @click="clearFilter">Clear</v-btn>
+            <v-btn type="submit" :disabled="!valid" color="primary">
+              Filter
+            </v-btn>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-form>
     <v-row>
       <v-col>
         <v-data-table :headers="headers" :items="list">
