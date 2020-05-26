@@ -16,6 +16,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 
 namespace ApartmentRental.Controllers
 {
@@ -26,11 +28,15 @@ namespace ApartmentRental.Controllers
     {
         private readonly ApartmentContext _context;
         private readonly AppSettings _appSettings;
+        private readonly IMapper _mapper;
 
-        public UserController(ApartmentContext context, IOptions<AppSettings> appSettings)
+        public UserController(ApartmentContext context, 
+            IOptions<AppSettings> appSettings,
+            IMapper mapper)
         {
             _context = context;
             _appSettings = appSettings.Value;
+            _mapper = mapper;
         }
 
         [AllowAnonymous]
@@ -72,44 +78,44 @@ namespace ApartmentRental.Controllers
             return user.WithoutPassword();
         }
 
-
         // GET: api/User
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<UserViewModel>>> GetUsers()
         {
-            return await _context.Users.ToListAsync();
+            return await _mapper.ProjectTo<UserViewModel>(_context.Users).ToListAsync();
         }
 
         [AllowAnonymous]
         [HttpGet("realtor")]
-        public async Task<ActionResult<IEnumerable<RealtorViewModel>>> GetRealtors()
+        public async Task<ActionResult<IEnumerable<UserViewModel>>> GetRealtors()
         {
-            return await _context.Users.Where(x => x.Role == Role.Realtor)
-                .Select(x => new RealtorViewModel { Id = x.Id, Username = x.Username })
+            return await _mapper
+                .ProjectTo<UserViewModel>(
+                    _context.Users.Where(x => x.Role == Role.Realtor))
                 .ToListAsync();
         }
 
         [AllowAnonymous]
         [HttpGet("current")]
-        public async Task<ActionResult<User>> GetCurrentUser()
+        public UserViewModel GetCurrentUser()
         {
             var userId = User.FindFirstValue(ClaimTypes.Name);
 
-            return await _context.Users.FindAsync(Int32.Parse(userId));
+            return  _mapper.Map<UserViewModel>(_context.Users.Find(Int32.Parse(userId)));
         }
 
         // GET: api/User/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser(int id)
+        public ActionResult<UserViewModel> GetUser(int id)
         {
-            var user = await _context.Users.FindAsync(id);
+            var user = _context.Users.Find(id);
 
             if (user == null)
             {
                 return NotFound();
             }
 
-            return user;
+            return _mapper.Map<UserViewModel>(user);
         }
 
         // PUT: api/User/5
@@ -148,7 +154,7 @@ namespace ApartmentRental.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<User>> PostUser(User user)
+        public async Task<ActionResult<UserViewModel>> PostUser(User user)
         {
             return await AddUser(user);
         }
@@ -156,7 +162,7 @@ namespace ApartmentRental.Controllers
         // POST: api/User/signup
         [AllowAnonymous]
         [HttpPost("signup")]
-        public async Task<ActionResult<User>> SignupUser(User user)
+        public async Task<ActionResult<UserViewModel>> SignupUser(User user)
         {
             user.Role = Role.Client;
             user.Token = string.Empty;
@@ -164,7 +170,7 @@ namespace ApartmentRental.Controllers
             return await AddUser(user);
         }
 
-        private async Task<ActionResult<User>> AddUser(User user)
+        private async Task<ActionResult<UserViewModel>> AddUser(User user)
         {
             if(_context.Users.FirstOrDefault(u => u.Username == user.Username) != null)
             {
@@ -173,13 +179,15 @@ namespace ApartmentRental.Controllers
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetUser", new { id = user.Id }, user);
+            return CreatedAtAction("GetUser", 
+                new { id = user.Id }, 
+                _mapper.Map<UserViewModel>(user));
         }
 
 
         // DELETE: api/User/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<User>> DeleteUser(int id)
+        public async Task<ActionResult<UserViewModel>> DeleteUser(int id)
         {
             var user = await _context.Users.FindAsync(id);
             if (user == null)
@@ -190,7 +198,7 @@ namespace ApartmentRental.Controllers
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
 
-            return user;
+            return _mapper.Map<UserViewModel>(user);
         }
 
         private bool UserExists(int id)

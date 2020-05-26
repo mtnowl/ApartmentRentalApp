@@ -16,7 +16,7 @@
             </n-link>
           </template>
           <template v-slot:item.actions="{ item }">
-            <n-link v-if="canEdit" :to="`/apartments/${item.id}/edit`">
+            <n-link :to="`/apartments/${item.id}/edit`">
               <v-icon small>
                 mdi-pencil
               </v-icon>

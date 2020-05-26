@@ -16,6 +16,7 @@ using ApartmentRental.Helpers;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using AutoMapper;
 
 namespace ApartmentRental
 {
@@ -40,6 +41,9 @@ namespace ApartmentRental
             // configure strongly typed settings objects
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
+
+            // configure automapper
+            services.AddAutoMapper(typeof(Startup));
 
             // configure jwt authentication
             var appSettings = appSettingsSection.Get<AppSettings>();

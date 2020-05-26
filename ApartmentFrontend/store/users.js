@@ -17,6 +17,7 @@ export const mutations = {
     state.list.filter((c) => user.id !== c.id);
   },
   merge(state, form) {
+    state.user.password = '';
     assign(state.user, form);
   },
   setuser(state, form) {
