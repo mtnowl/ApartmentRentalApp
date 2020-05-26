@@ -1,20 +1,31 @@
 <template>
-  <div>
-    <div>
-      <label>Username</label>
-      <input v-model="login.username" type="text" />
-    </div>
-    <div>
-      <label>Password</label>
-      <input v-model="login.password" type="text" />
-    </div>
-    <div>
-      <button @click="userLogin">Submit</button>
-      <button @click="logout">Logout</button>
-      <button @click="getApartments">Apartments</button>
-    </div>
-    <p>{{ errorMessage }}</p>
-  </div>
+  <v-card>
+    <v-toolbar>
+      <v-toolbar-title>Login</v-toolbar-title>
+    </v-toolbar>
+    <v-form v-model="valid" @submit.prevent="userLogin">
+      <v-text-field
+        v-model="login.username"
+        label="Username"
+        prepend-icon="person"
+        :rules="[rules.required]"
+        type="text"
+        required
+      ></v-text-field>
+      <v-text-field
+        v-model="login.password"
+        label="Password"
+        prepend-icon="lock"
+        :rules="[rules.required]"
+        type="password"
+        required
+      ></v-text-field>
+    </v-form>
+    <v-card-actions>
+      <v-btn type="submit" color="primary">Submit</v-btn>
+      <p>{{ errorMessage }}</p>
+    </v-card-actions>
+  </v-card>
 </template>
 
 <script>
@@ -25,7 +36,10 @@ export default {
         username: '',
         password: ''
       },
-      errorMessage: ''
+      errorMessage: '',
+      rules: {
+        required: (v) => !!v || 'Required'
+      }
     };
   },
   methods: {
