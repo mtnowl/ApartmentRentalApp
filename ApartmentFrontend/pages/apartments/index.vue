@@ -71,11 +71,6 @@
               disabled
             ></v-simple-checkbox>
           </template>
-          <template v-slot:item.actions="{}">
-            <v-icon small class="mr-2">
-              mdi-pencil
-            </v-icon>
-          </template>
           <!--
         
 
@@ -120,22 +115,6 @@ export default {
         { text: 'Size', value: 'area' },
         { text: 'Price', value: 'monthlyPrice' },
         { text: 'Occupied', value: 'isRented' }
-      ],
-      fields: [
-        {
-          key: 'name',
-          label: 'name',
-          sortable: true
-        },
-        {
-          key: 'updated_at',
-          sortable: true,
-          label: 'updated_at'
-        },
-        {
-          key: 'actions',
-          label: 'actions'
-        }
       ],
       valid: true,
       filter: {

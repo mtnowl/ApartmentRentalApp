@@ -80,7 +80,7 @@ export default {
     };
   },
   created() {
-    if (this.$store.state.auth.loggedIn) {
+    if (this.$auth.loggedIn) {
       this.$router.push('/apartments');
     }
   },
