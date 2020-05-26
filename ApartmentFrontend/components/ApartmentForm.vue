@@ -66,7 +66,7 @@
   </v-form>
 </template>
 <script>
-import { mapMutations, mapState } from 'vuex';
+import { mapState } from 'vuex';
 
 export default {
   name: 'ApartmentForm',
@@ -83,7 +83,6 @@ export default {
     ...mapState('apartments', ['apartment'])
   },
   methods: {
-    ...mapMutations({ mergeApartment: 'apartments/mergeapts' }),
     isUpdate() {
       return Object.prototype.hasOwnProperty.call(this.apartment, 'id');
     },
