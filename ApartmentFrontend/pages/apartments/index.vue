@@ -90,24 +90,30 @@
               disabled
             ></v-simple-checkbox>
           </template>
-          <!--
-        
-
-          <v-btn
-            v-v-modal.confirmDestroy
-            variant="outline-secondary"
-            @click="id = data.item.id"
-          >
-            {{ 'remove' }}
-          </v-btn>
-        </template> -->
+          <template v-slot:item.actions="{ item }">
+            <n-link v-if="canEdit" :to="`/apartments/${item.id}/edit`">
+              <v-icon small>
+                mdi-pencil
+              </v-icon>
+            </n-link>
+            <v-icon small @click="setupDeleteDialog(item)">
+              mdi-delete
+            </v-icon>
+          </template>
         </v-data-table>
-        <v-dialog
-          id="confirmDestroy"
-          :title="'destroy_confirm_title'"
-          @ok="destroy"
-        >
-          {{ 'destroy_confirm' }}
+        <v-dialog v-model="deleteDialog" max-width="290">
+          <v-card>
+            <v-card-title>Delete {{ itemToDelete.name }}? </v-card-title>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="primary" text @click="deleteDialog = false">
+                No
+              </v-btn>
+              <v-btn color="error" text @click="deleteItem">
+                Yes
+              </v-btn>
+            </v-card-actions>
+          </v-card>
         </v-dialog>
       </v-col>
     </v-row>
@@ -133,7 +139,8 @@ export default {
         { text: 'Rooms', value: 'rooms' },
         { text: 'Size', value: 'area' },
         { text: 'Price', value: 'monthlyPrice' },
-        { text: 'Occupied', value: 'isRented' }
+        { text: 'Occupied', value: 'isRented' },
+        { text: 'Actions', value: 'actions', sortable: false }
       ],
       valid: true,
       filter: {
@@ -149,7 +156,9 @@ export default {
           return v === null || v === '' || !isNaN(v) || 'Must be a number';
         },
         integer: (v) => Number.isInteger(+v) || 'Must be an integer'
-      }
+      },
+      itemToDelete: {},
+      deleteDialog: false
     };
   },
   computed: {
@@ -165,10 +174,15 @@ export default {
     }
   },
   methods: {
-    destroy() {
+    setupDeleteDialog(item) {
+      this.itemToDelete = item;
+      this.deleteDialog = true;
+    },
+    deleteItem() {
       this.$store
-        .dispatch('apartments/delete', { id: this.id })
+        .dispatch('apartments/delete', { id: this.itemToDelete.id })
         .then(() => this.$store.dispatch('apartments/get'));
+      this.deleteDialog = false;
     },
     refreshDataWithFilter() {
       this.$store.dispatch('apartments/get', { ...this.filter });
@@ -180,3 +194,11 @@ export default {
   }
 };
 </script>
+
+<style>
+/* fix how the headers don't align properly, 
+   awaiting bug fix: https://github.com/vuetifyjs/vuetify/issues/10164 */
+.v-data-table-header th {
+  white-space: nowrap;
+}
+</style>
