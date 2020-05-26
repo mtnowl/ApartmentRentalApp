@@ -81,6 +81,15 @@ namespace ApartmentRental.Controllers
         }
 
         [AllowAnonymous]
+        [HttpGet("realtor")]
+        public async Task<ActionResult<IEnumerable<RealtorViewModel>>> GetRealtors()
+        {
+            return await _context.Users.Where(x => x.Role == Role.Realtor)
+                .Select(x => new RealtorViewModel { Id = x.Id, Username = x.Username })
+                .ToListAsync();
+        }
+
+        [AllowAnonymous]
         [HttpGet("current")]
         public async Task<ActionResult<User>> GetCurrentUser()
         {

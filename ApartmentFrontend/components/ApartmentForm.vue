@@ -45,12 +45,15 @@
             :rules="[rules.required, rules.number]"
             required
           ></v-text-field>
-          <v-text-field
+          <v-select
             v-model="apartment.realtorUserId"
             label="Assigned Realtor"
-            :rules="[rules.required, rules.number, rules.integer]"
+            :items="realtors"
+            item-text="username"
+            item-value="id"
+            :rules="[rules.required]"
             required
-          ></v-text-field>
+          ></v-select>
           <v-checkbox
             v-model="apartment.isRented"
             label="Occupied"
@@ -70,6 +73,10 @@ import { mapState } from 'vuex';
 
 export default {
   name: 'ApartmentForm',
+  async fetch() {
+    const response = await this.$axios.get('user/realtor');
+    this.realtors = response.data;
+  },
   data: () => ({
     valid: false,
     errorMessage: '',
@@ -77,7 +84,8 @@ export default {
       required: (v) => !!v || 'Required',
       number: (v) => !isNaN(v) || 'Must be a number',
       integer: (v) => Number.isInteger(+v) || 'Must be an integer'
-    }
+    },
+    realtors: []
   }),
   computed: {
     ...mapState('apartments', ['apartment'])
