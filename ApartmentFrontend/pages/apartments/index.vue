@@ -21,6 +21,20 @@
               <v-row>
                 <v-col cols="12" sm="6" md="4">
                   <v-text-field
+                    v-model="filter.minRooms"
+                    label="Min # of Rooms"
+                    :rules="[rules.number, rules.integer]"
+                    required
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="filter.maxRooms"
+                    label="Max # of Rooms"
+                    :rules="[rules.number, rules.integer]"
+                    required
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="6" md="4">
+                  <v-text-field
                     v-model="filter.minArea"
                     label="Min Size"
                     :rules="[rules.number]"
@@ -47,20 +61,6 @@
                     required
                   ></v-text-field>
                 </v-col>
-                <v-col cols="12" sm="6" md="4">
-                  <v-text-field
-                    v-model="filter.minRooms"
-                    label="Min # of Rooms"
-                    :rules="[rules.number, rules.integer]"
-                    required
-                  ></v-text-field>
-                  <v-text-field
-                    v-model="filter.maxRooms"
-                    label="Max # of Rooms"
-                    :rules="[rules.number, rules.integer]"
-                    required
-                  ></v-text-field>
-                </v-col>
                 <v-col cols="12" sm="6" md="12" class="text-right">
                   <v-btn @click="clearFilter">Clear</v-btn>
                   <v-btn type="submit" :disabled="!valid" color="primary">
@@ -75,7 +75,12 @@
     </v-form>
     <v-row>
       <v-col>
-        <v-data-table :headers="headers" :items="list">
+        <v-data-table
+          :headers="headers"
+          :items="list"
+          :sort-by="['dateAdded']"
+          :sort-desc="[true]"
+        >
           <template v-slot:item.name="{ item }">
             <n-link v-if="canEdit" :to="`/apartments/${item.id}/edit`">
               {{ item.name }}
@@ -84,14 +89,17 @@
               {{ item.name }}
             </div>
           </template>
-          <template v-slot:item.isRented="{ item }">
+          <template v-slot:item.dateAdded="{ item }">
+            {{ $moment(item.dateAdded).format('YYYY/MM/DD') }}
+          </template>
+          <template v-if="canEdit" v-slot:item.isRented="{ item }">
             <v-simple-checkbox
               v-model="item.isRented"
               disabled
             ></v-simple-checkbox>
           </template>
-          <template v-slot:item.actions="{ item }">
-            <n-link v-if="canEdit" :to="`/apartments/${item.id}/edit`">
+          <template v-if="canEdit" v-slot:item.actions="{ item }">
+            <n-link :to="`/apartments/${item.id}/edit`">
               <v-icon small>
                 mdi-pencil
               </v-icon>
@@ -101,7 +109,7 @@
             </v-icon>
           </template>
         </v-data-table>
-        <v-dialog v-model="deleteDialog" max-width="290">
+        <v-dialog v-if="canEdit" v-model="deleteDialog" max-width="290">
           <v-card>
             <v-card-title>Delete {{ itemToDelete.name }}? </v-card-title>
             <v-card-actions>
@@ -132,16 +140,17 @@ export default {
     await store.dispatch('apartments/get');
   },
   data() {
+    const headers = [
+      { text: 'Name', value: 'name' },
+      { text: 'Description', value: 'description' },
+      { text: 'Rooms', value: 'rooms' },
+      { text: 'Size', value: 'area' },
+      { text: 'Price', value: 'monthlyPrice' },
+      { text: 'Date Added', value: 'dateAdded' }
+    ];
+
     return {
-      headers: [
-        { text: 'Name', value: 'name' },
-        { text: 'Description', value: 'description' },
-        { text: 'Rooms', value: 'rooms' },
-        { text: 'Size', value: 'area' },
-        { text: 'Price', value: 'monthlyPrice' },
-        { text: 'Occupied', value: 'isRented' },
-        { text: 'Actions', value: 'actions', sortable: false }
-      ],
+      headers,
       valid: true,
       filter: {
         minArea: null,
@@ -170,6 +179,14 @@ export default {
     canEdit() {
       return (
         this.$auth.user.role === 'Admin' || this.$auth.user.role === 'Realtor'
+      );
+    }
+  },
+  created() {
+    if (this.canEdit) {
+      this.headers.push(
+        { text: 'Occupied?', value: 'isRented' },
+        { text: 'Actions', value: 'actions', sortable: false }
       );
     }
   },

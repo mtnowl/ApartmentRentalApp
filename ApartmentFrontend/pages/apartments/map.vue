@@ -5,7 +5,7 @@
       language="en"
       :center="{ lat: list[0].latitude, lng: list[0].longitude }"
       :options="{ fullscreenControl: false }"
-      :zoom="4"
+      :zoom="3"
     >
       <GMapMarker
         v-for="apt in list"
