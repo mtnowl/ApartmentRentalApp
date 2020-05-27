@@ -3,7 +3,7 @@
     <v-app-bar fixed app>
       <v-tabs>
         <v-tab v-if="loggedIn" to="/apartments">Apartments</v-tab>
-        <v-tab v-else>Welcome!</v-tab>
+        <v-tab v-else disabled>Welcome!</v-tab>
         <v-tab v-if="isAdmin" to="/users">Users</v-tab>
         <v-spacer />
         <v-tab v-if="loggedIn && $vuetify.breakpoint.smAndUp" disabled>
