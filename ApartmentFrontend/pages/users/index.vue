@@ -16,12 +16,16 @@
             </n-link>
           </template>
           <template v-slot:item.actions="{ item }">
-            <n-link :to="`/apartments/${item.id}/edit`">
+            <n-link :to="`/users/${item.id}/edit`">
               <v-icon small>
                 mdi-pencil
               </v-icon>
             </n-link>
-            <v-icon small @click="setupDeleteDialog(item)">
+            <v-icon
+              v-if="$auth.user.id !== item.id"
+              small
+              @click="setupDeleteDialog(item)"
+            >
               mdi-delete
             </v-icon>
           </template>

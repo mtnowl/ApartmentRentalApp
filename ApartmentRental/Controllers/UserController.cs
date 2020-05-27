@@ -189,6 +189,10 @@ namespace ApartmentRental.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<UserViewModel>> DeleteUser(int id)
         {
+            var userId = Int32.Parse(User.FindFirstValue(ClaimTypes.Name));
+            if (id == userId)
+                return BadRequest(new { message = "Cannot delete yourself." });
+
             var user = await _context.Users.FindAsync(id);
             if (user == null)
             {
