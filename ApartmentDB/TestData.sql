@@ -2,10 +2,10 @@
 DELETE FROM [dbo].[User]
 
 SET IDENTITY_INSERT [dbo].[User] ON
-INSERT INTO [dbo].[User] ([Id], [Username], [Password], [Role]) VALUES (1, N'admin', N'admin', N'Admin')
-INSERT INTO [dbo].[User] ([Id], [Username], [Password], [Role]) VALUES (2, N'realtor', N'realtor', N'Realtor')
-INSERT INTO [dbo].[User] ([Id], [Username], [Password], [Role]) VALUES (3, N'client', N'client', N'Client')
-INSERT INTO [dbo].[User] ([Id], [Username], [Password], [Role]) VALUES (4, N'john', N'john', N'Realtor')
+INSERT INTO [dbo].[User] ([Id], [Username], [Password], [Role], [PasswordSalt]) VALUES (1, N'admin', N'OT672nTS108fBgHT9JWFEucWAv+dGEiS0X5E2G65TWI=', N'Admin', 0x4847DCB1F9537A6CF09F6B7F30FD3433)
+INSERT INTO [dbo].[User] ([Id], [Username], [Password], [Role], [PasswordSalt]) VALUES (2, N'realtor', N'1zjqPT0Db2SkhOS4OTS2/37QRQwe/ezFkDN+D47QIO4=', N'Realtor', 0xB58C2F7DC6CDA001632CE830858A4669)
+INSERT INTO [dbo].[User] ([Id], [Username], [Password], [Role], [PasswordSalt]) VALUES (3, N'client', N'0BBnc7tkaLphnwl207AJTLjQwrzV/sFftfHVvTv8GPw=', N'Client', 0x04057CF04E7A58C74D700539CBB6437F)
+INSERT INTO [dbo].[User] ([Id], [Username], [Password], [Role], [PasswordSalt]) VALUES (4, N'john', N'0Ctl1f+LV7nzbNhH7iFn459y0Z8FZqAiBwlrkbluIaM=', N'Realtor', 0x6AA289DC007D1AF4FF6E4C9585685A48)
 SET IDENTITY_INSERT [dbo].[User] OFF
 
 SET IDENTITY_INSERT [dbo].[Apartment] ON

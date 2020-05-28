@@ -18,6 +18,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using System.Security.Cryptography;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
 namespace ApartmentRental.Controllers
 {
@@ -48,16 +50,22 @@ namespace ApartmentRental.Controllers
             if (user == null)
                 return await Task.FromResult(BadRequest(new { message = "Username or password is incorrect" }));
 
-            return await Task.FromResult(Ok(user));
+            return await Task.FromResult(Ok(_mapper.Map<UserViewModel>(user)));
         }
 
         private User Authenticate(string username, string password)
         {
-            var user = _context.Users.SingleOrDefault(x => x.Username == username && x.Password == password);
+            var user = _context.Users.SingleOrDefault(x => x.Username == username);
 
             // return null if user not found
             if (user == null)
                 return null;
+
+            // check password
+            if(GetHashedPassword(password, user.PasswordSalt) != user.Password)
+            {
+                return null;
+            }
 
             // authentication successful so generate jwt token
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -162,12 +170,40 @@ namespace ApartmentRental.Controllers
         // POST: api/User/signup
         [AllowAnonymous]
         [HttpPost("signup")]
-        public async Task<ActionResult<UserViewModel>> SignupUser(User user)
+        public async Task<ActionResult<UserViewModel>> SignupUser(AuthenticateModel model)
         {
-            user.Role = Role.Client;
-            user.Token = string.Empty;
+            var user = new User
+            {
+                Username = model.Username,
+                Password = model.Password,
+                Role = Role.Client,
+                Token = string.Empty
+            };
 
             return await AddUser(user);
+        }
+
+        private string GetHashedPassword(string password, out byte[] salt)
+        {
+            // generate a 128-bit salt using a secure PRNG
+            salt = new byte[128 / 8];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(salt);
+            }
+
+            return GetHashedPassword(password, salt);
+        }
+
+        private string GetHashedPassword(string password, byte[] salt)
+        {
+            // derive a 256-bit subkey (use HMACSHA1 with 10,000 iterations)
+            return Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                password: password,
+                salt: salt,
+                prf: KeyDerivationPrf.HMACSHA1,
+                iterationCount: 10000,
+                numBytesRequested: 256 / 8));
         }
 
         private async Task<ActionResult<UserViewModel>> AddUser(User user)
@@ -176,6 +212,10 @@ namespace ApartmentRental.Controllers
             {
                 return BadRequest(new { message = "Username already exists."});
             }
+            var hashed = GetHashedPassword(user.Password, out byte[] salt);
+            user.Password = hashed;
+            user.PasswordSalt = salt;
+
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
