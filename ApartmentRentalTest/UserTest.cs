@@ -30,14 +30,11 @@ namespace ApartmentRentalTest
             _controller = null;
         }
 
-        [Fact]
-        public async void LoginNonExistingUser()
+        [Theory]
+        [MemberData(nameof(BadUserTheoryData))]
+        public async void LoginNonExistingUser(AuthenticateModel model)
         {
-            var result = await _controller.Authenticate(new AuthenticateModel
-            {
-                Username = "asdf",
-                Password = "1234"
-            });
+            var result = await _controller.Authenticate(model);
 
             Assert.IsType<BadRequestObjectResult>(result);
         }
@@ -57,6 +54,13 @@ namespace ApartmentRentalTest
                 { new AuthenticateModel { Username = "admin", Password = "admin"} },
                 { new AuthenticateModel { Username = "realtor", Password = "realtor"} },
                 { new AuthenticateModel { Username = "client", Password = "client"} }
+            };
+
+        public static TheoryData<AuthenticateModel> BadUserTheoryData =>
+            new TheoryData<AuthenticateModel>
+            {
+                { new AuthenticateModel { Username = "asdf", Password = "1234"} },
+                { new AuthenticateModel { Username = "realtor", Password = "admin"} }
             };
 
         private UserController SetupDefaultController()
