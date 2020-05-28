@@ -12,6 +12,7 @@ using Moq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace ApartmentRentalTest
@@ -32,34 +33,30 @@ namespace ApartmentRentalTest
         [Fact]
         public async void LoginNonExistingUser()
         {
-            var controller = _controller;
-            var result = await controller.Authenticate(new AuthenticateModel
+            var result = await _controller.Authenticate(new AuthenticateModel
             {
                 Username = "asdf",
                 Password = "1234"
             });
 
-            var actionResult = Assert.IsAssignableFrom<IActionResult>(result);
             Assert.IsType<BadRequestObjectResult>(result);
         }
 
         [Theory]
-        [MemberData(nameof(UserData))]
+        [MemberData(nameof(UserTheoryData))]
         public async void LoginExistingUsers(AuthenticateModel model)
         {
-            var controller = _controller;
-            var result = await controller.Authenticate(model);
+            var result = await _controller.Authenticate(model);
 
-            var actionResult = Assert.IsAssignableFrom<IActionResult>(result);
             Assert.IsType<OkObjectResult>(result);
         }
 
-        public static IEnumerable<object[]> UserData =>
-            new List<object[]>
+        public static TheoryData<AuthenticateModel> UserTheoryData =>
+            new TheoryData<AuthenticateModel>
             {
-                new object[] { new AuthenticateModel { Username = "admin", Password = "admin"} },
-                new object[] { new AuthenticateModel { Username = "realtor", Password = "realtor"} },
-                new object[] { new AuthenticateModel { Username = "client", Password = "client"} }
+                { new AuthenticateModel { Username = "admin", Password = "admin"} },
+                { new AuthenticateModel { Username = "realtor", Password = "realtor"} },
+                { new AuthenticateModel { Username = "client", Password = "client"} }
             };
 
         private UserController SetupDefaultController()
@@ -83,7 +80,6 @@ namespace ApartmentRentalTest
                 new ApartmentContext(options),
                 appSettingOptions.Object,
                 mapper.Object);
-
 
             return controller;
         }
