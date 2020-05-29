@@ -53,7 +53,7 @@ namespace ApartmentRental.Controllers
             }
             if (User.IsInRole(Role.Client) && apartment.IsRented)
             {
-                return Forbid();
+                return NotFound();
             }
 
             return apartment;
