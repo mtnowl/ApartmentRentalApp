@@ -136,6 +136,9 @@ namespace ApartmentRental.Controllers
             {
                 return BadRequest();
             }
+            var hashed = GetHashedPassword(user.Password, out byte[] salt);
+            user.Password = hashed;
+            user.PasswordSalt = salt;
 
             _context.Entry(user).State = EntityState.Modified;
 
